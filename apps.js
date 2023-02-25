@@ -32,7 +32,7 @@ const getPhones = (phones, dataLimit) => {
             <h5 class="card-title">${phone.phone_name}</h5>
             <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional
               content. This content is a little bit longer.</p>
-              <button onclick="loadPhoneDetails('${phone.slug}')" href = "#" class="btn btn-outline-danger">Details</button>
+              <button onclick="loadPhoneDetails('${phone.slug}')" href = "#" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#phoneDetails">Details</button>
           </div>
         </div>
     `;
@@ -74,7 +74,38 @@ const loadPhoneDetails = async id => {
   const url = `https://openapi.programming-hero.com/api/phone/${id}`;
   const res = await fetch(url);
   const data = await res.json();
-  console.log(data.data);
+  displayPhoneDetails(data.data);
+}
+
+const displayPhoneDetails = phone => {
+  console.log(phone);
+  const phoneTitle = document.getElementById('phoneDetailsLabel');
+   phoneTitle.innerText = phone.name;
+   const phoneDescription = document.getElementById('phoneDescription');
+   phoneDescription.innerHTML =`
+   <div class="container text-center">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 gap-2">
+      <div class="col">
+      <img class="img-fluid" src="${phone.image}">
+      </div>
+    <div class="col">
+    <p class="fw-semibold">${phone.name}</p>
+    <p>${phone.releaseDate}</p>
+    <p>${phone.brand}</p>
+    </div>
+    </div>
+  </div>
+  <p class="fw-bold text-decoration-underline text-center my-2">mainFeatures:</p>
+  <p class="mt-3">Storage: ${phone.mainFeatures.storage}</p>
+  <p>displaySize: ${phone.mainFeatures.displaySize}</p>
+  <p>memory: ${phone.mainFeatures.memory}</p>
+  <p>chipset: ${phone.mainFeatures.chipSet}</p>
+  <p class="fw-bold text-decoration-underline text-center my-2">Others:</p>
+  <p class="mt-3">Bluetooth: ${phone.others.Bluetooth}</p>
+  <p>Radio: ${phone.others.Radio}</p>
+  <p>WLAN: ${phone.others.WLAN}</p>
+  <p>USB: ${phone.others.USB}</p>
+   `
 }
 
 loadPhones('samsung');
